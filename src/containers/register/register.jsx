@@ -36,7 +36,7 @@ class Register extends React.Component {
         // console.log(redirectTo)
         if(redirectTO){
             // console.log(redirectTO)
-            return <Redirect to='/' />
+            return <Redirect to={redirectTO} />
         }
 
         return (
