@@ -1,6 +1,6 @@
 
-import {reqRegister, reqLogin, reqUpdate} from "../api/index";
-import {AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER} from "./action-types";
+import {reqRegister, reqLogin, reqUpdate, reqUser, reqUserList} from "../api/index";
+import {AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RECEIVE_USER_LIST, RESET_USER} from "./action-types";
 
 
 const authSuccess = (user) =>({type: AUTH_SUCCESS, data: user})
@@ -8,12 +8,13 @@ const errorMsg = (msg) =>({type: ERROR_MSG, data: msg})
 
 
 const receive = (user) =>({type: RECEIVE_USER, data: user})
-const reset = (msg) =>({type: RESET_USER, data: msg})
+export const reset = (msg) =>({type: RESET_USER, data: msg})
 
+const receiveList = (userList) => ({type: RECEIVE_USER_LIST, data: userList})
 
 
 export const register = (user) =>{
-    const {username, password, password2, type} = user
+    const {username, password, password2} = user
     if(password !== password2){
         return errorMsg("Password should be the same...")
     }
@@ -61,6 +62,7 @@ export const login = (user) =>{
 export const updateUser = (user) =>{
     return async dispatch =>{
         const response = await reqUpdate(user)
+        // console.log(user)
         const res = response.data
 
         if(res.code === 0){
@@ -70,4 +72,32 @@ export const updateUser = (user) =>{
             dispatch(reset(res.msg))
         }
     }
+}
+
+
+export const getUser = () =>{
+    return async dispatch =>{
+        const response = await reqUser()
+        const res = response.data
+
+        if (res.code === 0){
+            dispatch(receive(res.data))
+        }
+        else{
+            dispatch(reset(res.msg))
+        }
+    }
+}
+
+
+export const getUserList = (type) =>{
+    return async dispatch =>{
+        const response = await reqUserList(type)
+        const res = response.data
+
+        if (res.code === 0){
+            dispatch(receiveList(res.data))
+        }
+    }
+
 }

@@ -36,7 +36,7 @@ class ApplicantInfo extends React.Component {
         const {header, type} = this.props.user
         if (header){
             const path = type === 'boss'? '/boss':'/applicant'
-            return <Redirect to={path}></Redirect>
+            return <Redirect to={path}> </Redirect>
         }
 
         return (

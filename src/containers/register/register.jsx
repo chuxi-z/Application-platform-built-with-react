@@ -33,7 +33,6 @@ class Register extends React.Component {
 
     render() {
         const {msg, redirectTO} = this.props.user
-        // console.log(redirectTo)
         if(redirectTO){
             // console.log(redirectTO)
             return <Redirect to={redirectTO} />

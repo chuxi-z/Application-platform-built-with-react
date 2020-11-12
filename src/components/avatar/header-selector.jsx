@@ -17,7 +17,7 @@ export default class HeaderSelector extends React.Component {
         this.avatarList = []
         for(var i = 0; i < 20; i++){
             this.avatarList.push({
-                text: 'avatar' + (i+1),
+                text: '头像' + (i+1),
                 icon: require(`../../assets/imgs/头像${i+1}.png`)
             })
         }

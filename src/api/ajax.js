@@ -5,7 +5,7 @@ export default function ajax(url, data={}, type='GET'){
         let param = ''
 
         Object.keys(data).forEach(key => {
-            param += key + data[key] + '&'
+            param += key + '=' + data[key] + '&'
         })
 
         if(param){
