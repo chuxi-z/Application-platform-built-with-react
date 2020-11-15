@@ -1,6 +1,20 @@
 
-import {reqRegister, reqLogin, reqUpdate, reqUser, reqUserList} from "../api/index";
-import {AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RECEIVE_USER_LIST, RESET_USER} from "./action-types";
+import {reqRegister, reqLogin, reqUpdate, reqUser, reqUserList, reqChatMsgList, reqReadMsg} from "../api/index";
+import {AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RECEIVE_USER_LIST, RESET_USER, RECEIVE_MSG_LIST, RECEIVE_MSG} from "./action-types";
+import io from 'socket.io-client'
+
+const initIo = (dispatch, userid) =>{
+    if(!io.socket){
+        io.socket = io('ws://localhost:4000')
+        // 绑定'receiveMessage'的监听, 来接收服务器发送的消息
+        io.socket.on('receiveMsg', function (chatMsg) {
+            console.log('----------------- client starts to listen from serve', chatMsg)
+            if(chatMsg.from === userid || chatMsg.to === userid){
+                dispatch(receiveMsg(chatMsg))
+            }
+        })
+    }
+}
 
 
 const authSuccess = (user) =>({type: AUTH_SUCCESS, data: user})
@@ -11,6 +25,21 @@ const receive = (user) =>({type: RECEIVE_USER, data: user})
 export const reset = (msg) =>({type: RESET_USER, data: msg})
 
 const receiveList = (userList) => ({type: RECEIVE_USER_LIST, data: userList})
+
+const receiveMsgList = ({users, chatMess}) => ({type: RECEIVE_MSG_LIST, data: {users, chatMess}})
+const receiveMsg = (chatMsg) => ({type: RECEIVE_MSG, data: chatMsg})
+
+async function getMsgList(dispatch, userid){
+    initIo(dispatch, userid)
+    const response = await reqChatMsgList()
+    const res = response.data
+
+    if(res.code === 0){
+        const {users, chatMess} = res.data
+        dispatch(receiveMsgList({users, chatMess}))
+    }
+}
+
 
 
 export const register = (user) =>{
@@ -27,6 +56,7 @@ export const register = (user) =>{
         const res = response.data  // {code: 1/0, data: user, msg: ''}
 
         if (res.code === 0){
+            getMsgList(dispatch, res.data._id)
             dispatch(authSuccess(res.data))
         }
         else{
@@ -50,6 +80,7 @@ export const login = (user) =>{
         const res = response.data
 
         if (res.code === 0){
+            getMsgList(dispatch, res.data._id)
             dispatch(authSuccess(res.data))
         }
         else{
@@ -81,6 +112,7 @@ export const getUser = () =>{
         const res = response.data
 
         if (res.code === 0){
+            getMsgList(dispatch, res.data._id)
             dispatch(receive(res.data))
         }
         else{
@@ -101,3 +133,13 @@ export const getUserList = (type) =>{
     }
 
 }
+
+
+export const sendMsg = ({from, to, content}) =>{
+    return dispatch =>{
+        console.log('-------------------client send msg to server...',{from, to, content})
+        // initIo()
+        io.socket.emit('sendMsg', {from, to, content})
+    }
+}
+

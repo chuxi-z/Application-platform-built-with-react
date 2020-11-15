@@ -20,3 +20,12 @@ export const reqUser = () =>{
 export const reqUserList = (type) =>{
     return ajax("/userlist", {type})
 }
+
+export const reqChatMsgList = () =>{
+    return ajax("/msglist")
+}
+
+export const reqReadMsg = (from) =>{
+    return ajax("/readmsg", {from}, 'POST')
+}
+

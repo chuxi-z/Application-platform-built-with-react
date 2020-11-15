@@ -9,14 +9,15 @@ import Login from "./containers/login/login";
 import store from "./redux/store";
 
 import './assets/css/index.less'
+// import './test/SocketIO-test'
 
 
 ReactDOM.render(<HashRouter>
     <Provider store={store}>
         <Switch>
-            <Route path='/register' component={Register}></Route>
-            <Route path='/login' component={Login}></Route>
-            <Route component={Main}></Route>
+            <Route path='/register' component={Register} />
+            <Route path='/login' component={Login} />
+            <Route component={Main} />
         </Switch>
     </Provider>
 </HashRouter>, document.querySelector('#root'))

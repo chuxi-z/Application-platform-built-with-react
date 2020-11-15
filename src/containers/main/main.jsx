@@ -14,6 +14,7 @@ import boss from "../boss/boss";
 import applicant from "../applicant/applicant";
 import NotFound from "../../components/notFound/notFound";
 import NavFooter from "../../components/nav-footer/nav-footer";
+import Chat from "../chat/chat";
 
 class Main extends React.Component {
 
@@ -104,6 +105,7 @@ class Main extends React.Component {
                     })}
                     <Route path='/bossinfo' component={Boss}/>
                     <Route path='/applicantinfo' component={Applicant}/>
+                    <Route path='/chat/:userid' component={Chat}/>
                     <Route component={NotFound}/>
 
                 </Switch>
